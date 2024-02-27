@@ -1,0 +1,58 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{fullJustify}\PYG{p}{(}\PYG{n}{words}\PYG{p}{,} \PYG{n}{width}\PYG{p}{):}        \PYG{c+c1}{\PYGZsh{}处理sentence即words的函数}
+    \PYG{n}{ans} \PYG{o}{=} \PYG{p}{[]}                          \PYG{c+c1}{\PYGZsh{}用来存取words最后的处理结果}
+    \PYG{n}{curline}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}                        \PYG{c+c1}{\PYGZsh{}用来处理没行的单位}
+    \PYG{k}{for} \PYG{n}{word} \PYG{o+ow}{in} \PYG{n}{words}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{word}\PYG{p}{)}\PYG{o}{\PYGZgt{}}\PYG{n}{width}\PYG{p}{:}           \PYG{c+c1}{\PYGZsh{}如果word长度大于width则忽略该word}
+            \PYG{k}{continue}
+        \PYG{n}{prelen}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{curline}\PYG{o}{+}\PYG{n}{word}\PYG{p}{)}      \PYG{c+c1}{\PYGZsh{}prelen是加上将要加入的word后的长度}
+        \PYG{k}{if} \PYG{n}{prelen}\PYG{o}{\PYGZlt{}}\PYG{n}{width}\PYG{p}{:}              \PYG{c+c1}{\PYGZsh{}如果prelen\PYGZlt{}width确定加入}
+            \PYG{n}{curline}\PYG{o}{+=}\PYG{p}{(}\PYG{n}{word}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{prelen}\PYG{o}{==}\PYG{n}{width}\PYG{p}{:}           \PYG{c+c1}{\PYGZsh{}如果prelen=width将word加入后结束本行处理}
+            \PYG{n}{ans}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{curline}\PYG{o}{+}\PYG{n}{word}\PYG{p}{)}
+            \PYG{n}{curline}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}
+            \PYG{k}{continue}
+        \PYG{k}{else}\PYG{p}{:}                         \PYG{c+c1}{\PYGZsh{}如果prelen\PYGZgt{}width则开始进行本行处理}
+            \PYG{n}{curline}\PYG{o}{=}\PYG{n}{curline}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}             \PYG{c+c1}{\PYGZsh{}去掉尾部的空格}
+            \PYG{n}{ex\PYGZus{}space}\PYG{o}{=}\PYG{n}{width}\PYG{o}{\PYGZhy{}}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{curline}\PYG{p}{)}      \PYG{c+c1}{\PYGZsh{}额外空格}
+            \PYG{n}{my\PYGZus{}words}\PYG{o}{=}\PYG{n}{curline}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{)}
+            \PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{my\PYGZus{}words}\PYG{p}{)}
+            \PYG{n}{space}\PYG{o}{=}\PYG{n}{ex\PYGZus{}space}\PYG{o}{+}\PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}    \PYG{c+c1}{\PYGZsh{}总空格数}
+            \PYG{n}{curline}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}                       \PYG{c+c1}{\PYGZsh{}重新组织curline，此次处理后即为结果}
+            \PYG{k}{if} \PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZgt{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+                \PYG{n}{eve\PYGZus{}space}\PYG{o}{=}\PYG{n}{space}\PYG{o}{//}\PYG{p}{(}\PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+                \PYG{n}{ext\PYGZus{}space}\PYG{o}{=}\PYG{n}{space}\PYG{o}{\PYGZpc{}}\PYG{p}{(}\PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+                \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}
+                    \PYG{n}{curline}\PYG{o}{+=}\PYG{n}{my\PYGZus{}words}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+                    \PYG{n}{curline}\PYG{o}{+=}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{o}{*}\PYG{n}{eve\PYGZus{}space}   \PYG{c+c1}{\PYGZsh{}插入空格}
+                    \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ext\PYGZus{}space}\PYG{p}{:}
+                        \PYG{n}{curline}\PYG{o}{+=}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}
+                \PYG{n}{curline}\PYG{o}{+=}\PYG{n}{my\PYGZus{}words}\PYG{p}{[}\PYG{n}{num\PYGZus{}my\PYGZus{}words}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+                \PYG{n}{ans}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{curline}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}              \PYG{c+c1}{\PYGZsh{}如果本行只有一个单词，直接在尾部插入空格}
+                \PYG{n}{curline}\PYG{o}{+=}\PYG{n}{my\PYGZus{}words}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{ans}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{curline}\PYG{o}{.}\PYG{n}{ljust}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{))}
+            \PYG{n}{curline}\PYG{o}{=}\PYG{n}{word}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}
+        \PYG{k}{if} \PYG{n}{word} \PYG{o+ow}{is} \PYG{n}{words}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]:}  \PYG{c+c1}{\PYGZsh{}如果本行是最后一行，直接在尾部插入ex\PYGZus{}space个空格}
+            \PYG{n}{my\PYGZus{}words}\PYG{o}{=}\PYG{n}{curline}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{)[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+            \PYG{n}{ans}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n}{my\PYGZus{}words}\PYG{p}{))}\PYG{o}{.}\PYG{n}{ljust}\PYG{p}{(}\PYG{n}{width}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{))}
+    \PYG{k}{return} \PYG{n}{ans}
+
+
+\PYG{n}{file1\PYGZus{}name} \PYG{o}{=} \PYG{n+nb}{input}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}请输入文件名（仅支持txt文件）:\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{file2\PYGZus{}name} \PYG{o}{=} \PYG{n+nb}{input}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}请输入目标文件（仅支持txt文件）:\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{width} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n+nb}{input}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}请输入最大列数(推荐50\PYGZhy{}100列):\PYGZdq{}}\PYG{p}{))}
+\PYG{n}{file1} \PYG{o}{=} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{file1\PYGZus{}name}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}r\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{sentences} \PYG{o}{=} \PYG{n}{file1}\PYG{o}{.}\PYG{n}{read}\PYG{p}{()}                    \PYG{c+c1}{\PYGZsh{}读取file1内容到sentences中}
+\PYG{n}{file1}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+\PYG{n}{anses}\PYG{o}{=}\PYG{p}{[]}
+\PYG{n}{sentences} \PYG{o}{=} \PYG{n}{sentences}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{sentence} \PYG{o+ow}{in} \PYG{n}{sentences}\PYG{p}{:}
+    \PYG{n}{words} \PYG{o}{=} \PYG{n}{sentence}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{anses}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{fullJustify}\PYG{p}{(}\PYG{n}{words}\PYG{p}{,}\PYG{n}{width}\PYG{p}{))}  \PYG{c+c1}{\PYGZsh{}将sentences处理后加入到anses中}
+\PYG{n}{file2} \PYG{o}{=} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{file2\PYGZus{}name}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}w\PYGZsq{}}\PYG{p}{)}                \PYG{c+c1}{\PYGZsh{}将anses写入file2文件中}
+\PYG{k}{for} \PYG{n}{ans} \PYG{o+ow}{in} \PYG{n}{anses}\PYG{p}{:}
+    \PYG{k}{for} \PYG{n}{an} \PYG{o+ow}{in} \PYG{n}{ans}\PYG{p}{:}
+        \PYG{n}{file2}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{an}\PYG{o}{+}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{file2}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+\end{Verbatim}

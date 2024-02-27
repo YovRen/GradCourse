@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{ReplayBuffer}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{capacity}\PYG{p}{,} \PYG{n}{n\PYGZus{}step}\PYG{p}{,} \PYG{n}{gamma}\PYG{p}{,} \PYG{n}{device}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{capacity} \PYG{o}{=} \PYG{n}{capacity}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step} \PYG{o}{=} \PYG{n}{n\PYGZus{}step}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gamma} \PYG{o}{=} \PYG{n}{gamma}
+        \PYG{c+c1}{\PYGZsh{} 经验回放缓冲区}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{memory} \PYG{o}{=} \PYG{n}{deque}\PYG{p}{(}\PYG{n}{maxlen}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{capacity}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 存储N步经验的缓冲区}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer} \PYG{o}{=} \PYG{n}{deque}\PYG{p}{(}\PYG{n}{maxlen}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device} \PYG{o}{=} \PYG{n}{device}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}get\PYGZus{}n\PYGZus{}step\PYGZus{}info}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 从N步经验缓冲区获取N步信息的方法}
+        \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{3}\PYG{p}{:]}  \PYG{c+c1}{\PYGZsh{} 获取最后一个元素的奖励、下一个状态和完成状态}
+        \PYG{k}{for} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{rew}\PYG{p}{,} \PYG{n}{next\PYGZus{}s}\PYG{p}{,} \PYG{n}{do} \PYG{o+ow}{in} \PYG{n+nb}{reversed}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer}\PYG{p}{)[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]):}
+            \PYG{c+c1}{\PYGZsh{} 从后向前计算N步经验的奖励、下一个状态和完成状态}
+            \PYG{n}{reward} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gamma} \PYG{o}{*} \PYG{n}{reward} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{do}\PYG{p}{)} \PYG{o}{+} \PYG{n}{rew}
+            \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done} \PYG{o}{=} \PYG{p}{(}\PYG{n}{rew}\PYG{p}{,} \PYG{n}{next\PYGZus{}s}\PYG{p}{,} \PYG{n}{do}\PYG{p}{)} \PYG{k}{if} \PYG{n}{do} \PYG{k}{else} \PYG{p}{(}\PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done}
+
+    \PYG{k}{def} \PYG{n+nf}{store}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{state}\PYG{p}{,} \PYG{n}{action}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 存储经验到经验回放缓冲区}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{n}{state}\PYG{p}{,} \PYG{n}{action}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done}\PYG{p}{))}  \PYG{c+c1}{\PYGZsh{} 将经验添加到N步经验缓冲区}
+        \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step}\PYG{p}{:}
+            \PYG{k}{return}  \PYG{c+c1}{\PYGZsh{} 如果N步经验缓冲区未填满，则返回}
+
+        \PYG{c+c1}{\PYGZsh{} 获取N步信息}
+        \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}get\PYGZus{}n\PYGZus{}step\PYGZus{}info}\PYG{p}{()}
+        \PYG{n}{state}\PYG{p}{,} \PYG{n}{action} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}step\PYGZus{}buffer}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][:}\PYG{l+m+mi}{2}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} 获取第一个元素的状态和动作}
+        \PYG{c+c1}{\PYGZsh{} 将N步经验存储到经验回放缓冲区}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{memory}\PYG{o}{.}\PYG{n}{append}\PYG{p}{((}\PYG{n}{state}\PYG{p}{,} \PYG{n}{action}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{done}\PYG{p}{))}
+\end{Verbatim}

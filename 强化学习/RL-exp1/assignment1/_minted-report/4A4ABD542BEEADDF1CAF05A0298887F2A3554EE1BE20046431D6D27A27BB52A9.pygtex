@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{c+c1}{\PYGZsh{} 步骤 1：执行一步}
+\PYG{n}{action\PYGZus{}probs} \PYG{o}{=} \PYG{n}{policy}\PYG{p}{(}\PYG{n}{state}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 获取当前状态下的动作概率分布}
+\PYG{n}{action} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{choice}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{action\PYGZus{}probs}\PYG{p}{)),} \PYG{n}{p}\PYG{o}{=}\PYG{n}{action\PYGZus{}probs}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 根据概率选择动作}
+\PYG{n}{next\PYGZus{}state}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{done}\PYG{p}{,} \PYG{n}{\PYGZus{}} \PYG{o}{=} \PYG{n}{env}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{action}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} 执行选定的动作，获取下一个状态、奖励等信息}
+
+\PYG{c+c1}{\PYGZsh{} 更新统计信息}
+\PYG{n}{stats}\PYG{o}{.}\PYG{n}{episode\PYGZus{}rewards}\PYG{p}{[}\PYG{n}{i\PYGZus{}episode}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{reward}  \PYG{c+c1}{\PYGZsh{} 更新回合奖励}
+\PYG{n}{stats}\PYG{o}{.}\PYG{n}{episode\PYGZus{}lengths}\PYG{p}{[}\PYG{n}{i\PYGZus{}episode}\PYG{p}{]} \PYG{o}{=} \PYG{n}{t}  \PYG{c+c1}{\PYGZsh{} 更新回合长度}
+
+\PYG{c+c1}{\PYGZsh{} 步骤 2：时序差分更新}
+\PYG{n}{best\PYGZus{}next\PYGZus{}action} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{argmax}\PYG{p}{(}\PYG{n}{Q}\PYG{p}{[}\PYG{n}{next\PYGZus{}state}\PYG{p}{])}  \PYG{c+c1}{\PYGZsh{} 选择下一个状态中具有最大动作值的动作}
+\PYG{n}{td\PYGZus{}target} \PYG{o}{=} \PYG{n}{reward} \PYG{o}{+} \PYG{n}{discount\PYGZus{}factor} \PYG{o}{*} \PYG{n}{Q}\PYG{p}{[}\PYG{n}{next\PYGZus{}state}\PYG{p}{][}\PYG{n}{best\PYGZus{}next\PYGZus{}action}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} 计算时序差分目标值}
+\PYG{n}{td\PYGZus{}delta} \PYG{o}{=} \PYG{n}{td\PYGZus{}target} \PYG{o}{\PYGZhy{}} \PYG{n}{Q}\PYG{p}{[}\PYG{n}{state}\PYG{p}{][}\PYG{n}{action}\PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} 计算时序差分误差}
+\PYG{n}{Q}\PYG{p}{[}\PYG{n}{state}\PYG{p}{][}\PYG{n}{action}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{alpha} \PYG{o}{*} \PYG{n}{td\PYGZus{}delta}  \PYG{c+c1}{\PYGZsh{} 更新动作值函数}
+
+\PYG{k}{if} \PYG{n}{done}\PYG{p}{:}  \PYG{c+c1}{\PYGZsh{} 如果当前回合结束}
+    \PYG{k}{break}  \PYG{c+c1}{\PYGZsh{} 跳出循环，结束回合}
+
+\PYG{n}{state} \PYG{o}{=} \PYG{n}{next\PYGZus{}state}  \PYG{c+c1}{\PYGZsh{} 更新当前状态为下一步的状态}
+
+\end{Verbatim}

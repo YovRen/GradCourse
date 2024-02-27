@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{Agent}\PYG{p}{:}
+
+    \PYG{c+c1}{\PYGZsh{} 根据更新公式更新策略网络}
+    \PYG{k}{def} \PYG{n+nf}{learn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{epsilon\PYGZus{}decay}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 从缓冲区取样}
+        \PYG{n}{state\PYGZus{}batch}\PYG{p}{,} \PYG{n}{action\PYGZus{}batch}\PYG{p}{,} \PYG{n}{reward\PYGZus{}batch}\PYG{p}{,} \PYG{n}{next\PYGZus{}state\PYGZus{}batch}\PYG{p}{,} \PYG{n}{done\PYGZus{}batch} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{memory}\PYG{o}{.}\PYG{n}{sample}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 实际Q值}
+        \PYG{n}{q\PYGZus{}values} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{policy\PYGZus{}net}\PYG{p}{(}\PYG{n}{state\PYGZus{}batch}\PYG{p}{)}\PYG{o}{.}\PYG{n}{gather}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{index}\PYG{o}{=}\PYG{n}{action\PYGZus{}batch}\PYG{o}{.}\PYG{n}{unsqueeze}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{))}\PYG{o}{.}\PYG{n}{squeeze}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}double}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} 直接使用target网络的最大Q值}
+            \PYG{n}{next\PYGZus{}q\PYGZus{}values} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{target\PYGZus{}net}\PYG{p}{(}\PYG{n}{next\PYGZus{}state\PYGZus{}batch}\PYG{p}{)}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} 使用policy网络选择动作，使用target网络计算目标Q值}
+            \PYG{n}{next\PYGZus{}actions} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{policy\PYGZus{}net}\PYG{p}{(}\PYG{n}{state\PYGZus{}batch}\PYG{p}{)}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{detach}\PYG{p}{()}\PYG{o}{.}\PYG{n}{unsqueeze}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+            \PYG{n}{next\PYGZus{}q\PYGZus{}values} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{target\PYGZus{}net}\PYG{p}{(}\PYG{n}{next\PYGZus{}state\PYGZus{}batch}\PYG{p}{)}\PYG{o}{.}\PYG{n}{gather}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{index}\PYG{o}{=}\PYG{n}{next\PYGZus{}actions}\PYG{p}{)}\PYG{o}{.}\PYG{n}{squeeze}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 预测Q值}
+        \PYG{n}{expected\PYGZus{}q\PYGZus{}values} \PYG{o}{=} \PYG{n}{reward\PYGZus{}batch} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gamma} \PYG{o}{*} \PYG{n}{next\PYGZus{}q\PYGZus{}values} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{done\PYGZus{}batch}\PYG{p}{)}
+        \PYG{k}{pass}
+\end{Verbatim}

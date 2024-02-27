@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{ReplayBuffer}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf}{sample}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 从经验回放缓冲区中随机采样批量数据}
+        \PYG{n}{batch} \PYG{o}{=} \PYG{n}{random}\PYG{o}{.}\PYG{n}{sample}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{memory}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 从采样的批量数据中提取状态、动作、奖励、下一个状态和完成状态}
+        \PYG{n}{states} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n}{data}\PYG{o}{.}\PYG{n}{state} \PYG{k}{for} \PYG{n}{data} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{float}\PYG{p}{)}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+        \PYG{n}{actions} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n}{data}\PYG{o}{.}\PYG{n}{action} \PYG{k}{for} \PYG{n}{data} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{long}\PYG{p}{)}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+        \PYG{n}{rewards} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n}{data}\PYG{o}{.}\PYG{n}{reward} \PYG{k}{for} \PYG{n}{data} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{float}\PYG{p}{)}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+        \PYG{n}{next\PYGZus{}states} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n}{data}\PYG{o}{.}\PYG{n}{next\PYGZus{}state} \PYG{k}{for} \PYG{n}{data} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{float}\PYG{p}{)}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+        \PYG{n}{dones} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n}{data}\PYG{o}{.}\PYG{n}{done} \PYG{k}{for} \PYG{n}{data} \PYG{o+ow}{in} \PYG{n}{batch}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{uint8}\PYG{p}{)}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{states}\PYG{p}{,} \PYG{n}{actions}\PYG{p}{,} \PYG{n}{rewards}\PYG{p}{,} \PYG{n}{next\PYGZus{}states}\PYG{p}{,} \PYG{n}{dones}
+\end{Verbatim}

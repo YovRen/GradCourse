@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{NoisyLinear}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{input\PYGZus{}dim}\PYG{p}{,} \PYG{n}{output\PYGZus{}dim}\PYG{p}{,} \PYG{n}{std\PYGZus{}init}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{n}{NoisyLinear}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+        \PYG{c+c1}{\PYGZsh{} 输入和输出维度}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim} \PYG{o}{=} \PYG{n}{input\PYGZus{}dim}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim} \PYG{o}{=} \PYG{n}{output\PYGZus{}dim}
+        \PYG{c+c1}{\PYGZsh{} 初始标准差}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{std\PYGZus{}init} \PYG{o}{=} \PYG{n}{std\PYGZus{}init}
+        \PYG{c+c1}{\PYGZsh{} 权重的均值和标准差}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}mu} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Parameter}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{))}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Parameter}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{))}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{register\PYGZus{}buffer}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}weight\PYGZus{}epsilon\PYGZsq{}}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{))}
+        \PYG{c+c1}{\PYGZsh{} 偏置的均值和标准差}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}mu} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Parameter}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{))}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Parameter}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{))}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{register\PYGZus{}buffer}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}bias\PYGZus{}epsilon\PYGZsq{}}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{FloatTensor}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{))}
+        \PYG{c+c1}{\PYGZsh{} 初始化参数和噪声}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{reset\PYGZus{}parameter}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{reset\PYGZus{}noise}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{reset\PYGZus{}parameter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 初始化参数}
+        \PYG{n}{nn}\PYG{o}{.}\PYG{n}{init}\PYG{o}{.}\PYG{n}{kaiming\PYGZus{}uniform\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}mu}\PYG{p}{,} \PYG{n}{a}\PYG{o}{=}\PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{))}
+        \PYG{n}{fan\PYGZus{}in}\PYG{p}{,} \PYG{n}{\PYGZus{}} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{init}\PYG{o}{.}\PYG{n}{\PYGZus{}calculate\PYGZus{}fan\PYGZus{}in\PYGZus{}and\PYGZus{}fan\PYGZus{}out}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}mu}\PYG{p}{)}
+        \PYG{n}{bound} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{fan\PYGZus{}in}\PYG{p}{)}
+        \PYG{n}{nn}\PYG{o}{.}\PYG{n}{init}\PYG{o}{.}\PYG{n}{uniform\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}mu}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{n}{bound}\PYG{p}{,} \PYG{n}{bound}\PYG{p}{)}
+        \PYG{n}{nn}\PYG{o}{.}\PYG{n}{init}\PYG{o}{.}\PYG{n}{constant\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}sigma}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{std\PYGZus{}init} \PYG{o}{/} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{))}
+        \PYG{n}{nn}\PYG{o}{.}\PYG{n}{init}\PYG{o}{.}\PYG{n}{constant\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}sigma}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{std\PYGZus{}init} \PYG{o}{/} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{reset\PYGZus{}noise}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} 重置噪声的权重}
+        \PYG{n}{epsilon\PYGZus{}in} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}dim}\PYG{p}{)}
+        \PYG{n}{epsilon\PYGZus{}out} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}epsilon}\PYG{o}{.}\PYG{n}{copy\PYGZus{}}\PYG{p}{(}\PYG{n}{epsilon\PYGZus{}out}\PYG{o}{.}\PYG{n}{ger}\PYG{p}{(}\PYG{n}{epsilon\PYGZus{}in}\PYG{p}{))}
+        \PYG{c+c1}{\PYGZsh{} 重置噪声的偏置}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}epsilon}\PYG{o}{.}\PYG{n}{copy\PYGZus{}}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}dim}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{input}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{training}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} 训练模式下，添加噪声}
+            \PYG{n}{weight} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}mu} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}sigma}\PYG{o}{.}\PYG{n}{mul}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}epsilon}\PYG{p}{)}
+            \PYG{n}{bias} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}mu} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}sigma}\PYG{o}{.}\PYG{n}{mul}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}epsilon}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} 推理模式下，使用均值参数}
+            \PYG{n}{weight} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weight\PYGZus{}mu}
+            \PYG{n}{bias} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias\PYGZus{}mu}
+        \PYG{k}{return} \PYG{n}{F}\PYG{o}{.}\PYG{n}{linear}\PYG{p}{(}\PYG{n+nb}{input}\PYG{p}{,} \PYG{n}{weight}\PYG{p}{,} \PYG{n}{bias}\PYG{p}{)}
+\end{Verbatim}

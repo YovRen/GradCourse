@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{QNet}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{):}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fc1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fc2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fc3}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{x}
+
+\PYG{k}{class} \PYG{n+nc}{DuelingQNet}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{):}
+        \PYG{n}{feature} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fc1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 计算V(s)}
+        \PYG{n}{advantage} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{feature}\PYG{p}{)}
+        \PYG{n}{advantage} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}fc2}\PYG{p}{(}\PYG{n}{advantage}\PYG{p}{)}
+        \PYG{n}{advantage} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{advantage}\PYG{p}{)}
+        \PYG{n}{advantage} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}fc3}\PYG{p}{(}\PYG{n}{advantage}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} 计算A(s,a)}
+        \PYG{n}{value} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{feature}\PYG{p}{)}
+        \PYG{n}{value} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{adv\PYGZus{}fc2}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+        \PYG{n}{value} \PYG{o}{=} \PYG{n}{F}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+        \PYG{n}{value} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{adv\PYGZus{}fc3}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{value} \PYG{o}{+} \PYG{n}{advantage} \PYG{o}{\PYGZhy{}} \PYG{n}{advantage}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{()}
+\end{Verbatim}

@@ -1,0 +1,18 @@
+\contentsline {section}{\numberline {1}实验要求}{3}{section.1}%
+\contentsline {section}{\numberline {2}实验原理}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}DQN算法}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}DoubleDQN算法}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}DuelingDQN算法}{4}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Noisy Network}{4}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Multi-step Learning}{4}{subsection.2.5}%
+\contentsline {section}{\numberline {3}实验代码}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}模型：QNet和DuelingQNet}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}缓冲区：ReplayBuffer}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}训练代理：Agent}{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}NoisyQNet}{6}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}NStepRelayBuffer}{7}{subsection.3.5}%
+\contentsline {section}{\numberline {4}实验结果}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Double和Dueling的效果}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}超参数的影响}{9}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}改进方法的影响}{9}{subsection.4.3}%
+\contentsline {section}{\numberline {5}实验总结}{10}{section.5}%
